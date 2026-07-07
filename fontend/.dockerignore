@@ -1,0 +1,21 @@
+# 前端 Docker 构建忽略项
+node_modules/
+dist/
+.vite/
+
+# HTTPS 本地证书（Docker 里不需要，用 nginx）
+.cert
+.key
+mkcert.exe
+
+# 版本控制
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# 日志
+*.log
+npm-debug.log*

@@ -1,0 +1,72 @@
+# ============================================================
+# application.properties.example
+# ============================================================
+# 这是一个配置模板，提交到 Git 仓库供协作者参考。
+# 真实配置请复制本文件为 application.properties 并填入你自己的密钥。
+#
+# 使用方法：
+#   1. cp application.properties.example application.properties
+#   2. 编辑 application.properties，把下方所有 <填入...> 占位符替换为真实值
+#   3. application.properties 已被 .gitignore 忽略，不会被提交
+#
+# 任何包含真实 API Key / 密码的文件都请勿提交到公共仓库！
+# ============================================================
+
+spring.application.name=NFC-system
+server.port=8088
+server.address=0.0.0.0
+
+# ============ Datasource (MySQL) ============
+spring.datasource.url=jdbc:mysql://localhost:3306/ai_character_system?useSSL=false&serverTimezone=UTC&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+spring.datasource.username=root
+spring.datasource.password=<填入你的 MySQL 密码>
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# HikariCP 连接池
+spring.datasource.hikari.connection-timeout=30000
+spring.datasource.hikari.maximum-pool-size=10
+spring.datasource.hikari.minimum-idle=2
+spring.datasource.hikari.idle-timeout=600000
+spring.datasource.hikari.max-lifetime=1800000
+spring.datasource.hikari.connection-test-query=SELECT 1
+spring.datasource.hikari.validation-timeout=5000
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# 文件上传大小（3D 模型可能很大）
+spring.servlet.multipart.max-file-size=500MB
+spring.servlet.multipart.max-request-size=500MB
+
+# Tomcat 最大请求体大小
+server.tomcat.max-swallow-size=-1
+server.tomcat.max-http-form-post-size=-1
+
+# ============ 豆包 Doubao (Volcengine Ark) ============
+# 从 https://console.volcengine.com/ark 获取 API Key 和模型 endpoint
+doubao.api-key=<填入你的豆包 API Key，例如 sk-xxx 或 ark-xxx>
+doubao.model=<填入你的模型 endpoint ID，例如 ep-20260329195113-47fgd>
+doubao.url=https://ark.cn-beijing.volces.com/api/v3/images/generations
+
+# ============ 腾讯混元 Hunyuan 3D ============
+# 从 https://console.cloud.tencent.com 获取（必须以 sk- 开头）
+hunyuan.api-key=<填入你的混元 API Key，例如 sk-xxx>
+hunyuan.submit-url=https://api.ai3d.cloud.tencent.com/v1/ai3d/submit
+hunyuan.query-url=https://api.ai3d.cloud.tencent.com/v1/ai3d/query
+
+# ============ Cloudflare R2 图床 ============
+# 从 Cloudflare Dashboard -> R2 -> Manage R2 API Tokens 获取
+r2.endpoint=<填入你的 R2 endpoint，例如 https://<accountid>.r2.cloudflarestorage.com>
+r2.access-key=<填入你的 R2 Access Key>
+r2.secret-key=<填入你的 R2 Secret Key>
+r2.bucket=<填入你的 Bucket 名称，例如 capstone>
+r2.public-domain=<填入你的公网访问域名，例如 https://cdn.example.com/>
+
+# ============ 本地模型/图片目录 ============
+# Windows 用户保持默认即可
+# macOS/Linux 用户请改为 /Users/xxx/models/images/ 或 ~/models/images/
+app.local.image-dir=D:/models/images/
+app.local.model-dir=D:/models/unzip/
+app.local.model-temp-dir=D:/models/
+# 后端服务的公网地址，前端访问图片/模型时使用
+app.local.public-base-url=http://localhost:8088

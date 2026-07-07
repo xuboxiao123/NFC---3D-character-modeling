@@ -1,0 +1,120 @@
+version: '3.8'
+
+# ============================================================
+#  NFC AI 角色创作系统 - Docker Compose 一键部署
+#  用法：
+#    1. 复制 .env.example 为 .env，填入你的 API 密钥
+#    2. docker-compose up -d
+#    3. 浏览器访问 http://localhost
+# ============================================================
+
+services:
+  # ============================================================
+  #  MySQL 数据库
+  # ============================================================
+  mysql:
+    image: mysql:8.0
+    container_name: nfc-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-nfc_secure_pass_2026}
+      MYSQL_DATABASE: ai_character_system
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - nfc-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-nfc_secure_pass_2026}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ============================================================
+  #  Spring Boot 后端
+  # ============================================================
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: nfc-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # 数据库连接（容器内网络用服务名 mysql）
+      DB_URL: jdbc:mysql://mysql:3306/ai_character_system?useSSL=false&serverTimezone=UTC&autoReconnect=true&failOverReadOnly=false&maxReconnects=10&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-nfc_secure_pass_2026}
+      
+      # 豆包 API（图生图）
+      DOUBAO_API_KEY: ${DOUBAO_API_KEY}
+      DOUBAO_MODEL: ${DOUBAO_MODEL:-ep-20260329195113-47fgd}
+      DOUBAO_URL: ${DOUBAO_URL:-https://ark.cn-beijing.volces.com/api/v3/images/generations}
+      
+      # 腾讯混元 3D
+      HUNYUAN_API_KEY: ${HUNYUAN_API_KEY}
+      HUNYUAN_SUBMIT_URL: ${HUNYUAN_SUBMIT_URL:-https://api.ai3d.cloud.tencent.com/v1/ai3d/submit}
+      HUNYUAN_QUERY_URL: ${HUNYUAN_QUERY_URL:-https://api.ai3d.cloud.tencent.com/v1/ai3d/query}
+      
+      # Cloudflare R2 图床
+      R2_ENDPOINT: ${R2_ENDPOINT}
+      R2_ACCESS_KEY: ${R2_ACCESS_KEY}
+      R2_SECRET_KEY: ${R2_SECRET_KEY}
+      R2_BUCKET: ${R2_BUCKET:-capstone}
+      R2_PUBLIC_DOMAIN: ${R2_PUBLIC_DOMAIN}
+      
+      # 本地模型存储（容器内路径，通过 volume 持久化）
+      LOCAL_IMAGE_DIR: /app/storage/images/
+      LOCAL_MODEL_DIR: /app/storage/models/
+      LOCAL_MODEL_TEMP_DIR: /app/storage/tmp/
+      LOCAL_PUBLIC_BASE_URL: http://localhost:8088
+      
+      TZ: Asia/Shanghai
+    volumes:
+      - backend_storage:/app/storage
+    ports:
+      - "8088:8088"
+    networks:
+      - nfc-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8088/actuator/health || exit 0"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  # ============================================================
+  #  Vue 3 前端（nginx）
+  # ============================================================
+  frontend:
+    build:
+      context: ./fontend
+      dockerfile: Dockerfile
+    container_name: nfc-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - nfc-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+networks:
+  nfc-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+  backend_storage:
+    driver: local

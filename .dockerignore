@@ -1,0 +1,34 @@
+# 减小后端构建上下文，加快 docker build
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+.git/
+.gitignore
+.gitattributes
+
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# 前端目录不在后端构建里
+fontend/
+screenshots/
+
+# 敏感文件
+.env
+.env.local
+src/main/resources/application-local.properties
+src/main/resources/application-dev.properties
+src/main/resources/application-prod.properties
+
+# 文档、日志
+*.log
+logs/
+tmp/
+temp/
+README.md
+HELP.md
+setup.md

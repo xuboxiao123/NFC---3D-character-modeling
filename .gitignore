@@ -1,0 +1,64 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### 🔐 敏感配置（切勿提交）###
+# 后端 Spring Boot 配置（含 API Key 等，仅本地保存）
+src/main/resources/application.properties
+src/main/resources/application-local.properties
+src/main/resources/application-dev.properties
+src/main/resources/application-prod.properties
+# 保留模板文件，用于协作
+!src/main/resources/application.properties.example
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
+### 前端 ###
+fontend/node_modules/
+fontend/dist/
+fontend/.vite/
+# 前端本地HTTPS证书
+fontend/.cert
+fontend/.key
+fontend/mkcert.exe
+
+### 本地测试/临时产物 ###
+screenshots/
+*.log
+logs/
+tmp/
+temp/
+</content>
