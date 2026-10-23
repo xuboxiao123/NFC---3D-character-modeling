@@ -1,0 +1,4 @@
+#pragma once
+// Copy to firmware_config.h and choose your own setup access-point password.
+#define NFC_AP_SSID "NFC-Character-Setup"
+#define NFC_AP_PASSWORD "CHANGE_ME_8PLUS"
