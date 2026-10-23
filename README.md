@@ -7,6 +7,8 @@
 
 ---
 
+**[源码导航：前端 / 后端 / ESP32 固件](CODE_INDEX.md)**
+
 ## ✨ 项目特色
 
 - 🎴 **NFC 物理交互**：使用 ESP32 + RC522 读卡器，通过刷卡触发预设的表情、脸型、动作
@@ -44,7 +46,7 @@
 |---|---|
 | 前端 | Vue 3, Vite, Three.js, MediaPipe Hands, Vue Router, Axios |
 | 后端 | Spring Boot 3.2, Spring Data JPA, MySQL, Lombok |
-| 硬件 | ESP32, RC522 NFC 模块（固件仓库单独维护） |
+| 硬件 | ESP32, RC522 NFC 模块（见 hardware/ 目录） |
 | AI 服务 | 豆包（Doubao/Volcengine Ark）、腾讯混元 3D |
 | 存储 | MySQL（业务数据）、Cloudflare R2（图片/模型文件） |
 | 部署 | Docker、Docker Compose、nginx |
@@ -206,7 +208,7 @@ npm run dev
 
 ### 4. NFC 硬件（可选）
 
-ESP32 固件不在本仓库中，见 [`setup.md`](setup.md) 了解卡片编号方案和写卡方法。
+ESP32 固件现位于 [`hardware/`](hardware/)，入口为 [`hardware/src/main.cpp`](hardware/src/main.cpp)。构建与配置见硬件目录说明；卡片编号方案见 [`setup.md`](setup.md)。
 
 **没有硬件也能测试**，通过 curl 模拟刷卡：
 
@@ -316,3 +318,4 @@ NFC 硬件部分（ESP32 + RC522）**并非必需**。系统在软件层面提�
 - **作者**：许博骁 (Xu Boxiao)
 - **学校**：浙大城市学院 (Hangzhou City University)
 - **年份**：2026
+
